@@ -21,7 +21,8 @@ architecture Behavioral of top is
 component angle_fsm
 	generic (SIMULATING : boolean );
     Port ( CLK,LEFT,RIGHT,RST : in std_logic;
-           CURRENT_ANGLE : out std_logic_vector(7 downto 0) );
+           CURRENT_ANGLE : out std_logic_vector(7 downto 0);
+           CURRENT_ANGLE_INDEX : out std_logic_vector(4 downto 0) );
 end component; 
 
 -- declare angle display
@@ -46,10 +47,20 @@ component clock_divider is
 end component;
 
 signal CURRENT_ANGLE : std_logic_vector(7 downto 0);
+signal CURRENT_ANGLE_INDEX : std_logic_vector(4 downto 0);
 
 begin
 
-FSM : angle_fsm generic map (SIMULATING => false ) port map (CLK => CLK, LEFT => button_left, RIGHT => button_right, RST => button_center, CURRENT_ANGLE => CURRENT_ANGLE);
+FSM : angle_fsm 
+	generic map (SIMULATING => false ) 
+	port map (
+		CLK => CLK, 
+		LEFT => button_left, 
+		RIGHT => button_right, 
+		RST => button_center, 
+		CURRENT_ANGLE => CURRENT_ANGLE,
+		CURRENT_ANGLE_INDEX => CURRENT_ANGLE_INDEX
+		);
 
 DISPLAY : angle_display port map (CLK => CLK, ANODE => ANODE, CATHODE => CATHODE, CURRENT_ANGLE => CURRENT_ANGLE);
 

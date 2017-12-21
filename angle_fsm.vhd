@@ -8,7 +8,8 @@ use IEEE.NUMERIC_STD.ALL;
 entity angle_fsm is
 	generic (SIMULATING : boolean );
     Port ( CLK,LEFT,RIGHT,RST : in std_logic;
-           CURRENT_ANGLE : out std_logic_vector(7 downto 0) );
+           CURRENT_ANGLE : out std_logic_vector(7 downto 0);
+           CURRENT_ANGLE_INDEX : out std_logic_vector(4 downto 0));
 end angle_fsm;
 
 architecture Behavioral of angle_fsm is
@@ -48,6 +49,8 @@ architecture Behavioral of angle_fsm is
 	signal ram_data : std_logic_vector(7 downto 0);
 	
 begin
+
+	CURRENT_ANGLE_INDEX <= std_logic_vector(to_unsigned(ram_addr, CURRENT_ANGLE_INDEX'length));
 
 -- create a 1.5hz clock
 slow_clock_gen: clock_divider 

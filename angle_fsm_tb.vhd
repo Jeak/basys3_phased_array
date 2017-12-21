@@ -46,7 +46,8 @@ ARCHITECTURE behavior OF angle_fsm_tb IS
          LEFT : IN  std_logic;
          RIGHT : IN  std_logic;
          RST : IN  std_logic;
-         CURRENT_ANGLE : OUT  std_logic_vector(7 downto 0)
+         CURRENT_ANGLE : OUT  std_logic_vector(7 downto 0);
+			CURRENT_ANGLE_INDEX : out std_logic_vector(4 downto 0)
         );
     END COMPONENT;
     
@@ -59,6 +60,7 @@ ARCHITECTURE behavior OF angle_fsm_tb IS
 
  	--Outputs
    signal CURRENT_ANGLE : std_logic_vector(7 downto 0);
+   signal CURRENT_ANGLE_INDEX : std_logic_vector(4 downto 0);
 
 
 	signal count : natural := 0;
@@ -73,7 +75,8 @@ BEGIN
           LEFT => LEFT,
           RIGHT => RIGHT,
           RST => RST,
-          CURRENT_ANGLE => CURRENT_ANGLE
+          CURRENT_ANGLE => CURRENT_ANGLE,
+          CURRENT_ANGLE_INDEX => CURRENT_ANGLE_INDEX
         );
 	CLK <= not CLK after 4 ns;
 	
