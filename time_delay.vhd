@@ -64,6 +64,15 @@ architecture Behavioral of time_delay is
 	 );
 	 signal element_data : row;
 	 
+	component clock_divider is
+		Generic ( DIVISOR : natural ); -- must be even
+		Port( 
+				CLK : in  std_logic;
+				RST : in std_logic;
+				HOLDOFF : in std_logic_vector(31 downto 0);
+				CLKDIV : out  std_logic);
+	end component;
+	 
 begin
 
 	-- When making a large lookup table, it is vastly preferred to read out the data with a clocked process.
@@ -93,8 +102,25 @@ begin
 	
 	-- Now we need N resettable clock dividers with the reset time configurable
 	
---    
---    element <= element_sig;
+	gen_clocks : for i in 0 to 9 generate
+	
+		a_clock: clock_divider 
+		generic map ( DIVISOR => 66666 ) -- here's where you set the frequency of the audio
+		PORT MAP(
+			CLK => CLK,
+			RST => angle_changed,
+			HOLDOFF => std_logic_vector(to_unsigned(element_data(i), 32)), -- this is the clever bit
+			CLKDIV => element_sig(i)
+		);
+	
+	end generate gen_clocks;
+	
+    
+	ELEMENT <= element_sig;
+	
+	
+	
+	
 --------------
 ---- Time delay is element to element
 ---- Here's a chart of time delay in seconds. Note that if time delay is negative
@@ -123,214 +149,6 @@ begin
 ---- 0.000313230873595        |70     |313230.873595
 ---- 0.000328269251004        |80     |328269.251004
 ---- 0.000333333333333        |90     |333333.333333
---
---
----- create a counter that only resets when current_angle changes
---counter : process (CLK)
---begin
---	if rising_edge(CLK) then
---		old_current_angle <= CURRENT_ANGLE;
---		if(CURRENT_ANGLE /= old_current_angle) then
---			count <= -500000;
---		else
---			if count < 500000 then
---				count <= count + 1;
---			end if;
---		end if;
---	end if;
---end process;
---
----- run when current angle changes
---angle_delay : process (CURRENT_ANGLE)
---
---begin
---    case (CURRENT_ANGLE) is
---                when "10100110" =>
---                    delay := -333333;    
---                
---                when "10110000" => 
---                    delay := -328269;
---                    
---                when "10111010" =>
---                    delay := -313230;
---                            
---                when "11000100" => 
---                    delay := -288675;  
---
---                when "11001110" =>
---                    delay := -255348;
---
---                when "11011000" => 
---                    delay := -214262; 
---
---                when "11100010" =>
---                    delay := -166666;
---
---                when "11101100" =>
---                    delay := -114006;
---
---                when "11110110" =>
---                    delay := -57882;
---
---                when "00000000" =>
---                    delay := 0;
---
---                when "00001010" =>
---                    delay := 57882;
---
---                when "00010100" =>
---                    delay := 114006;
---                    
---                when "00011110" =>
---                    delay := 166666;
---
---                when "00101000" =>
---                    delay := 214262;
---
---                when "00110010" =>
---                    delay := 255348;
---
---                when "00111100" =>
---                    delay := 288675; 
---
---                when "01000110" =>
---                    delay := 313230;
---
---                when "01010000" =>
---                    delay := 328269;
---
---                when "01011010" =>
---                    delay := 333333;
---                       
---                when others => -- failsafe case
---            end case;
---end process;
---
---
---clockgen_0 : process (CLK)
---begin
---    if (rising_edge(CLK) and (count >= (delay * 0))) then
---                count_local0 <= count_local0 + X"1";
---                --if count = X"1" then -- simulation 100mhz
---                if count_local0 = ("00000000000000010000010001101010" / 2) then
---                    element_sig(0) <= not element_sig(0);
---                    count_local0 <= "00000000000000000000000000000000";
---                end if;
---            end if;          
---end process;
---
---clockgen_1 : process (CLK)
---begin
---    if (rising_edge(CLK) and (count >= (delay * 1))) then
---                count_local1 <= count_local1 + X"1";
---                --if count = X"1" then -- simulation 100mhz
---                if count_local1 = ("00000000000000010000010001101010" / 2) then
---                    element_sig(1) <= not element_sig(1);
---                    count_local1 <= "00000000000000000000000000000000";
---                end if;
---            end if;          
---end process;
---
---clockgen_2 : process (CLK)
---begin
---    if (rising_edge(CLK) and (count >= (delay * 2))) then
---                count_local2 <= count_local2 + X"1";
---                --if count = X"1" then -- simulation 100mhz
---                if count_local2 = ("00000000000000010000010001101010" / 2) then
---                    element_sig(2) <= not element_sig(2);
---                    count_local2 <= "00000000000000000000000000000000";
---                end if;
---            end if;          
---end process;
---
---
---clockgen_3 : process (CLK)
---begin
---    if (rising_edge(CLK) and (count >= (delay * 3))) then
---                count_local3 <= count_local3 + X"1";
---                --if count = X"1" then -- simulation 100mhz
---                if count_local3 = ("00000000000000010000010001101010" / 2) then
---                    element_sig(3) <= not element_sig(3);
---                    count_local3 <= "00000000000000000000000000000000";
---                end if;
---            end if;          
---end process;
---
---
---clockgen_4 : process (CLK)
---begin
---    if (rising_edge(CLK) and (count >= (delay * 4))) then
---                count_local4 <= count_local4 + X"1";
---                --if count = X"1" then -- simulation 100mhz
---                if count_local4 = ("00000000000000010000010001101010" / 2) then
---                    element_sig(4) <= not element_sig(4);
---                    count_local4 <= "00000000000000000000000000000000";
---                end if;
---            end if;          
---end process;
---
---
---clockgen_5 : process (CLK)
---begin
---    if (rising_edge(CLK) and (count >= (delay * 5))) then
---                count_local5 <= count_local5 + X"1";
---                --if count = X"1" then -- simulation 100mhz
---                if count_local5 = ("00000000000000010000010001101010" / 2) then
---                    element_sig(5) <= not element_sig(5);
---                    count_local5 <= "00000000000000000000000000000000";
---                end if;
---            end if;          
---end process;
---
---
---clockgen_6 : process (CLK)
---begin
---    if (rising_edge(CLK) and (count >= (delay * 6))) then
---                count_local6 <= count_local6 + X"1";
---                --if count = X"1" then -- simulation 100mhz
---                if count_local6 = ("00000000000000010000010001101010" / 2) then
---                    element_sig(6) <= not element_sig(6);
---                    count_local6 <= "00000000000000000000000000000000";
---                end if;
---            end if;          
---end process;
---
---
---clockgen_7 : process (CLK)
---begin
---    if (rising_edge(CLK) and (count >= (delay * 7))) then
---                count_local7 <= count_local7 + X"1";
---                --if count = X"1" then -- simulation 100mhz
---                if count_local7 = ("00000000000000010000010001101010" / 2) then
---                    element_sig(7) <= not element_sig(7);
---                    count_local7 <= "00000000000000000000000000000000";
---                end if;
---            end if;          
---end process;
---
---
---clockgen_8 : process (CLK)
---begin
---    if (rising_edge(CLK) and (count >= (delay * 8))) then
---                count_local8 <= count_local8 + X"1";
---                --if count = X"1" then -- simulation 100mhz
---                if count_local8 = ("00000000000000010000010001101010" / 2) then
---                    element_sig(8) <= not element_sig(8);
---                    count_local8 <= "00000000000000000000000000000000";
---                end if;
---            end if;          
---end process;
---
---
---clockgen_9 : process (CLK)
---begin
---    if (rising_edge(CLK) and (count >= (delay * 9))) then
---                count_local9 <= count_local9 + X"1";
---                --if count = X"1" then -- simulation 100mhz
---                if count_local9 = ("00000000000000010000010001101010" / 2) then
---                    element_sig(9) <= not element_sig(9);
---                    count_local9 <= "00000000000000000000000000000000";
---                end if;
---            end if;          
---end process;
+
+
 end Behavioral;

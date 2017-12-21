@@ -36,6 +36,7 @@ end component;
 component time_delay
     Port ( CLK : in std_logic;
            CURRENT_ANGLE : in std_logic_vector(7 downto 0);
+           CURRENT_ANGLE_INDEX : in std_logic_vector(4 downto 0);
            ELEMENT : out std_logic_vector(9 downto 0));
 end component;
 
@@ -55,9 +56,19 @@ FSM : angle_fsm
 		CURRENT_ANGLE_INDEX => CURRENT_ANGLE_INDEX
 		);
 
-DISPLAY : angle_display port map (CLK => CLK, ANODE => ANODE, CATHODE => CATHODE, CURRENT_ANGLE => CURRENT_ANGLE);
+DISPLAY : angle_display 
+	port map (
+		CLK => CLK, 
+		ANODE => ANODE, 
+		CATHODE => CATHODE, 
+		CURRENT_ANGLE => CURRENT_ANGLE);
 
-DELAY : time_delay port map (CLK => CLK, CURRENT_ANGLE => CURRENT_ANGLE, ELEMENT => ELEMENT);
+DELAY : time_delay 
+	port map (
+		CLK => CLK, 
+		CURRENT_ANGLE => CURRENT_ANGLE, 
+		CURRENT_ANGLE_INDEX => CURRENT_ANGLE_INDEX, 
+		ELEMENT => ELEMENT);
 
  
 negative_indicate : process (CLK)
