@@ -33,6 +33,8 @@ entity clock_divider is
 	Generic ( DIVISOR : natural ); -- must be even
 	Port( 
 			CLK : in  std_logic;
+			RST : in std_logic;
+			HOLDOFF : in std_logic_vector(31 downto 0);
 			CLKDIV : out  std_logic);
 end clock_divider;
 

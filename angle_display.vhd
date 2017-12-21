@@ -17,6 +17,8 @@ architecture Behavioral of angle_display is
 		Generic ( DIVISOR : natural ); -- must be even
 		Port( 
 				CLK : in  std_logic;
+				RST : in std_logic;
+				HOLDOFF : in std_logic_vector(31 downto 0);
 				CLKDIV : out  std_logic);
 	end component;
 
@@ -39,6 +41,8 @@ tone_gen: clock_divider
 generic map ( DIVISOR => 416666 )
 PORT MAP(
 	CLK => CLK,
+	RST => '0',
+	HOLDOFF => (others => '0'),
 	CLKDIV => clk_240
 );
     

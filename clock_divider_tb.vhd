@@ -43,6 +43,8 @@ ARCHITECTURE behavior OF clock_divider_tb IS
 	 generic ( DIVISOR : natural );
     PORT(
          CLK : IN  std_logic;
+			RST : in std_logic;
+			HOLDOFF : in std_logic_vector(31 downto 0);
          CLKDIV : OUT  std_logic
         );
     END COMPONENT;
@@ -50,6 +52,8 @@ ARCHITECTURE behavior OF clock_divider_tb IS
 
    --Inputs
    signal CLK : std_logic := '0';
+   signal RST : std_logic := '0';
+	signal HOLDOFF : std_logic_vector(31 downto 0) := (others => '0');
 
  	--Outputs
    signal CLKDIV : std_logic;
@@ -63,6 +67,8 @@ BEGIN
 	generic map ( DIVISOR => DIVISOR )
 	PORT MAP (
           CLK => CLK,
+			 RST => RST,
+			 HOLDOFF => HOLDOFF,
           CLKDIV => CLKDIV
         );
 

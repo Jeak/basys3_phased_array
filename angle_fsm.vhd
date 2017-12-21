@@ -19,6 +19,8 @@ architecture Behavioral of angle_fsm is
 		Generic ( DIVISOR : natural ); -- must be even
 		Port( 
 				CLK : in  std_logic;
+				RST : in std_logic;
+				HOLDOFF : in std_logic_vector(31 downto 0);
 				CLKDIV : out  std_logic);
 	end component;
 	
@@ -57,6 +59,8 @@ slow_clock_gen: clock_divider
 generic map ( DIVISOR => 66666666 )
 PORT MAP(
 	CLK => CLK,
+	RST => '0',
+	HOLDOFF => (others => '0'),
 	CLKDIV => clk_sig
 );
 -- NOTE: clk_sig is not a real clock! In other words it
