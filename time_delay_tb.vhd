@@ -43,6 +43,7 @@ ARCHITECTURE behavior OF time_delay_tb IS
     PORT(
          CLK : IN  std_logic;
          CURRENT_ANGLE : IN  std_logic_vector(7 downto 0);
+         CURRENT_ANGLE_INDEX : IN  std_logic_vector(4 downto 0);
          ELEMENT : OUT  std_logic_vector(9 downto 0)
         );
     END COMPONENT;
@@ -51,6 +52,7 @@ ARCHITECTURE behavior OF time_delay_tb IS
    --Inputs
    signal CLK : std_logic := '0';
    signal CURRENT_ANGLE : std_logic_vector(7 downto 0) := std_logic_vector(to_signed(-40, 8));
+   signal CURRENT_ANGLE_INDEX : std_logic_vector(4 downto 0) := std_logic_vector(to_unsigned(5, 8));
 
  	--Outputs
    signal ELEMENT : std_logic_vector(9 downto 0);
@@ -68,7 +70,7 @@ BEGIN
    uut: time_delay PORT MAP (
           CLK => CLK,
           CURRENT_ANGLE => CURRENT_ANGLE,
-          TONE => TONE,
+          CURRENT_ANGLE_INDEX => CURRENT_ANGLE_INDEX,
           ELEMENT => ELEMENT
         );
 
