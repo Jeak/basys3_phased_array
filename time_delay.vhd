@@ -19,8 +19,19 @@ architecture Behavioral of time_delay is
     signal element_sig : std_logic_vector(9 downto 0) := "0000000000";
     signal rst : std_logic := '0';
     -- create a shared variable
-    shared variable count : integer range 0 to 500000;
+    shared variable count : integer range -500000 to 500000;
     shared variable delay : integer range -500000 to 500000;
+	 
+	 signal count_local0 : unsigned(31 downto 0) := (others => '0');
+	 signal count_local1 : unsigned(31 downto 0) := (others => '0');
+	 signal count_local2 : unsigned(31 downto 0) := (others => '0');
+	 signal count_local3 : unsigned(31 downto 0) := (others => '0');
+	 signal count_local4 : unsigned(31 downto 0) := (others => '0');
+	 signal count_local5 : unsigned(31 downto 0) := (others => '0');
+	 signal count_local6 : unsigned(31 downto 0) := (others => '0');
+	 signal count_local7 : unsigned(31 downto 0) := (others => '0');
+	 signal count_local8 : unsigned(31 downto 0) := (others => '0');
+	 signal count_local9 : unsigned(31 downto 0) := (others => '0');
 begin
     
     element <= element_sig;
@@ -133,138 +144,128 @@ end process;
 
 
 clockgen_0 : process (CLK)
-     variable count_local : unsigned(31 downto 0);
 begin
     if (rising_edge(CLK) and (count >= (delay * 0))) then
-                count_local := count_local + X"1";
+                count_local0 <= count_local0 + X"1";
                 --if count = X"1" then -- simulation 100mhz
-                if count_local = ("00000000000000010000010001101010" / 2) then
+                if count_local0 = ("00000000000000010000010001101010" / 2) then
                     element_sig(0) <= not element_sig(0);
-                    count_local := "00000000000000000000000000000000";
+                    count_local0 <= "00000000000000000000000000000000";
                 end if;
             end if;          
 end process;
 
 clockgen_1 : process (CLK)
-     variable count_local : unsigned(31 downto 0);
 begin
     if (rising_edge(CLK) and (count >= (delay * 1))) then
-                count_local := count_local + X"1";
+                count_local1 <= count_local1 + X"1";
                 --if count = X"1" then -- simulation 100mhz
-                if count_local = ("00000000000000010000010001101010" / 2) then
+                if count_local1 = ("00000000000000010000010001101010" / 2) then
                     element_sig(1) <= not element_sig(1);
-                    count_local := "00000000000000000000000000000000";
+                    count_local1 <= "00000000000000000000000000000000";
                 end if;
             end if;          
 end process;
 
 clockgen_2 : process (CLK)
-     variable count_local : unsigned(31 downto 0);
 begin
     if (rising_edge(CLK) and (count >= (delay * 2))) then
-                count_local := count_local + X"1";
+                count_local2 <= count_local2 + X"1";
                 --if count = X"1" then -- simulation 100mhz
-                if count_local = ("00000000000000010000010001101010" / 2) then
+                if count_local2 = ("00000000000000010000010001101010" / 2) then
                     element_sig(2) <= not element_sig(2);
-                    count_local := "00000000000000000000000000000000";
+                    count_local2 <= "00000000000000000000000000000000";
                 end if;
             end if;          
 end process;
 
 
 clockgen_3 : process (CLK)
-     variable count_local : unsigned(31 downto 0);
 begin
     if (rising_edge(CLK) and (count >= (delay * 3))) then
-                count_local := count_local + X"1";
+                count_local3 <= count_local3 + X"1";
                 --if count = X"1" then -- simulation 100mhz
-                if count_local = ("00000000000000010000010001101010" / 2) then
+                if count_local3 = ("00000000000000010000010001101010" / 2) then
                     element_sig(3) <= not element_sig(3);
-                    count_local := "00000000000000000000000000000000";
+                    count_local3 <= "00000000000000000000000000000000";
                 end if;
             end if;          
 end process;
 
 
 clockgen_4 : process (CLK)
-     variable count_local : unsigned(31 downto 0);
 begin
     if (rising_edge(CLK) and (count >= (delay * 4))) then
-                count_local := count_local + X"1";
+                count_local4 <= count_local4 + X"1";
                 --if count = X"1" then -- simulation 100mhz
-                if count_local = ("00000000000000010000010001101010" / 2) then
+                if count_local4 = ("00000000000000010000010001101010" / 2) then
                     element_sig(4) <= not element_sig(4);
-                    count_local := "00000000000000000000000000000000";
+                    count_local4 <= "00000000000000000000000000000000";
                 end if;
             end if;          
 end process;
 
 
 clockgen_5 : process (CLK)
-     variable count_local : unsigned(31 downto 0);
 begin
     if (rising_edge(CLK) and (count >= (delay * 5))) then
-                count_local := count_local + X"1";
+                count_local5 <= count_local5 + X"1";
                 --if count = X"1" then -- simulation 100mhz
-                if count_local = ("00000000000000010000010001101010" / 2) then
+                if count_local5 = ("00000000000000010000010001101010" / 2) then
                     element_sig(5) <= not element_sig(5);
-                    count_local := "00000000000000000000000000000000";
+                    count_local5 <= "00000000000000000000000000000000";
                 end if;
             end if;          
 end process;
 
 
 clockgen_6 : process (CLK)
-     variable count_local : unsigned(31 downto 0);
 begin
     if (rising_edge(CLK) and (count >= (delay * 6))) then
-                count_local := count_local + X"1";
+                count_local6 <= count_local6 + X"1";
                 --if count = X"1" then -- simulation 100mhz
-                if count_local = ("00000000000000010000010001101010" / 2) then
+                if count_local6 = ("00000000000000010000010001101010" / 2) then
                     element_sig(6) <= not element_sig(6);
-                    count_local := "00000000000000000000000000000000";
+                    count_local6 <= "00000000000000000000000000000000";
                 end if;
             end if;          
 end process;
 
 
 clockgen_7 : process (CLK)
-     variable count_local : unsigned(31 downto 0);
 begin
     if (rising_edge(CLK) and (count >= (delay * 7))) then
-                count_local := count_local + X"1";
+                count_local7 <= count_local7 + X"1";
                 --if count = X"1" then -- simulation 100mhz
-                if count_local = ("00000000000000010000010001101010" / 2) then
+                if count_local7 = ("00000000000000010000010001101010" / 2) then
                     element_sig(7) <= not element_sig(7);
-                    count_local := "00000000000000000000000000000000";
+                    count_local7 <= "00000000000000000000000000000000";
                 end if;
             end if;          
 end process;
 
 
 clockgen_8 : process (CLK)
-     variable count_local : unsigned(31 downto 0);
 begin
     if (rising_edge(CLK) and (count >= (delay * 8))) then
-                count_local := count_local + X"1";
+                count_local8 <= count_local8 + X"1";
                 --if count = X"1" then -- simulation 100mhz
-                if count_local = ("00000000000000010000010001101010" / 2) then
+                if count_local8 = ("00000000000000010000010001101010" / 2) then
                     element_sig(8) <= not element_sig(8);
-                    count_local := "00000000000000000000000000000000";
+                    count_local8 <= "00000000000000000000000000000000";
                 end if;
             end if;          
 end process;
 
 
 clockgen_9 : process (CLK)
-     variable count_local : unsigned(31 downto 0);
 begin
     if (rising_edge(CLK) and (count >= (delay * 9))) then
-                count_local := count_local + X"1";
+                count_local9 <= count_local9 + X"1";
                 --if count = X"1" then -- simulation 100mhz
-                if count_local = ("00000000000000010000010001101010" / 2) then
+                if count_local9 = ("00000000000000010000010001101010" / 2) then
                     element_sig(9) <= not element_sig(9);
-                    count_local := "00000000000000000000000000000000";
+                    count_local9 <= "00000000000000000000000000000000";
                 end if;
             end if;          
 end process;
