@@ -30,7 +30,7 @@ USE ieee.std_logic_1164.ALL;
  
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
---USE ieee.numeric_std.ALL;
+USE ieee.numeric_std.ALL;
  
 ENTITY clock_divider_tb IS
 END clock_divider_tb;
@@ -53,13 +53,14 @@ ARCHITECTURE behavior OF clock_divider_tb IS
    --Inputs
    signal CLK : std_logic := '0';
    signal RST : std_logic := '0';
-	signal HOLDOFF : std_logic_vector(31 downto 0) := (others => '0');
+	signal HOLDOFF : std_logic_vector(31 downto 0) := std_logic_vector(to_unsigned(5, 32));
 
  	--Outputs
    signal CLKDIV : std_logic;
 
-	constant DIVISOR : natural := 3;
- 
+	constant DIVISOR : natural := 4;
+
+	signal count : natural := 0;
 BEGIN
  
 	-- Instantiate the Unit Under Test (UUT)
@@ -73,5 +74,17 @@ BEGIN
         );
 
 	CLK <= not CLK after 4 ns;
+	
+	process(CLK) is
+	begin
+	if(rising_edge(CLK)) then
+		count <= count + 1;
+		if(count = 20) then
+			RST <= '1';
+		else
+			RST <= '0';
+		end if;
+	end if;
+	end process;
 
 END;
