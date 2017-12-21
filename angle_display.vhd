@@ -47,6 +47,7 @@ begin
     case (SEL) is
         when '0' => MUX_OUTPUT <= MUX_INPUT(3 downto 0);
         when '1' => MUX_OUTPUT <= MUX_INPUT(7 downto 4);
+		  when others => MUX_OUTPUT <= (others => '0');
     end case; 
 end process;       
 
@@ -66,6 +67,11 @@ begin
             -- select digit 1
             SEL <= '1';
             ANODE <= "1101";
+				
+            when others =>
+            -- select digit 0
+            SEL <= '0';
+            ANODE <= "1110";
         end case;            
     end if;
 end process;

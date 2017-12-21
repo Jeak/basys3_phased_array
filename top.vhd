@@ -19,6 +19,7 @@ architecture Behavioral of top is
 
 -- declare angle FSM
 component angle_fsm
+	generic (SIMULATING : boolean );
     Port ( CLK,LEFT,RIGHT,RST : in std_logic;
            CURRENT_ANGLE : out std_logic_vector(7 downto 0) );
 end component; 
