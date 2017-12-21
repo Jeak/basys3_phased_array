@@ -39,13 +39,6 @@ component time_delay
            ELEMENT : out std_logic_vector(9 downto 0));
 end component;
 
-component clock_divider is
-	Generic ( DIVISOR : natural ); -- must be even
-	Port( 
-			CLK : in  std_logic;
-			CLKDIV : out  std_logic);
-end component;
-
 signal CURRENT_ANGLE : std_logic_vector(7 downto 0);
 signal CURRENT_ANGLE_INDEX : std_logic_vector(4 downto 0);
 
