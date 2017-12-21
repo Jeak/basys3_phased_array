@@ -13,21 +13,22 @@ end angle_fsm;
 architecture Behavioral of angle_fsm is
     signal PS,NS : std_logic_vector(7 downto 0) := "00000000"; --8 bit signed to represent value (range: -90 to +90), defaults to 0
     signal clk_sig : std_logic;
+	 
+	component clock_divider is
+		Generic ( DIVISOR : natural ); -- must be even
+		Port( 
+				CLK : in  std_logic;
+				CLKDIV : out  std_logic);
+	end component;
 begin
 
 -- create a 1.5hz clock
- slow_clock_gen : process (CLK)
-        variable count : unsigned (31 downto 0) := "00000000000000000000000000000000";
-    begin
-        if rising_edge(CLK) then
-            count := count + X"1";
-            --if count = X"1" then -- simulation 100mhz
-            if count = "11111110010100000010101010" then -- create a 1.5hz clock
-                clk_sig <= not clk_sig;
-                count := "00000000000000000000000000000000";
-            end if;
-        end if;
-    end process;
+slow_clock_gen: clock_divider 
+generic map ( DIVISOR => 66666666 )
+PORT MAP(
+	CLK => CLK,
+	CLKDIV => clk_sig
+);
 
 
 -- only update state when buttons change get pressed and on rising edge of clock for speed

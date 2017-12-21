@@ -38,6 +38,13 @@ component time_delay
            ELEMENT : out std_logic_vector(9 downto 0));
 end component;
 
+component clock_divider is
+	Generic ( DIVISOR : natural ); -- must be even
+	Port( 
+			CLK : in  std_logic;
+			CLKDIV : out  std_logic);
+end component;
+
 signal clk_1500hz : std_logic :='0';
 signal CURRENT_ANGLE : std_logic_vector(7 downto 0);
 
@@ -50,18 +57,12 @@ DISPLAY : angle_display port map (CLK => CLK, ANODE => ANODE, CATHODE => CATHODE
 DELAY : time_delay port map (CLK => CLK, TONE => clk_1500hz, CURRENT_ANGLE => CURRENT_ANGLE, ELEMENT => ELEMENT);
 
 -- create a 1500 Hz Tone
- tone_gen : process (CLK)
-        variable count : unsigned (31 downto 0) := "00000000000000000000000000000000";
-    begin
-        if rising_edge(CLK) then
-            count := count + X"1";
-            --if count = X"1" then -- simulation 100mhz
-            if count = "00000000000000000000001010011010" then
-                clk_1500hz <= not clk_1500hz;
-                count := "00000000000000000000000000000000";
-            end if;
-        end if;
-    end process;
+gen_1500: clock_divider 
+generic map ( DIVISOR => 66666 )
+PORT MAP(
+	CLK => CLK,
+	CLKDIV => clk_1500hz
+);
  
 negative_indicate : process (CURRENT_ANGLE)
     variable angle_int : integer range -90 to 90;

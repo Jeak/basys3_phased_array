@@ -13,6 +13,13 @@ end angle_display;
 
 architecture Behavioral of angle_display is
 
+	component clock_divider is
+		Generic ( DIVISOR : natural ); -- must be even
+		Port( 
+				CLK : in  std_logic;
+				CLKDIV : out  std_logic);
+	end component;
+
 signal clk_240 : std_logic := '0';
 signal SEL : std_logic := '0';
 signal MUX_INPUT : std_logic_vector(7 downto 0);
@@ -28,18 +35,12 @@ begin
 end process;
 
 -- create a 240 hz tone
- tone_gen : process (CLK)
-        variable count : unsigned (31 downto 0) := "00000000000000000000000000000000";
-    begin
-        if rising_edge(CLK) then
-            count := count + X"1";
-            --if count = X"1" then -- simulation 100mhz
-            if count = "00000000000001100101101110011011" then -- create a 240hz clock
-                clk_240 <= not clk_240;
-                count := "00000000000000000000000000000000";
-            end if;
-        end if;
-    end process;
+tone_gen: clock_divider 
+generic map ( DIVISOR => 416666 )
+PORT MAP(
+	CLK => CLK,
+	CLKDIV => clk_240
+);
     
 mux_switches : process (SEL) -- choose which set
 begin
