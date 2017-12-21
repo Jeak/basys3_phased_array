@@ -64,7 +64,7 @@ PORT MAP(
 	CLKDIV => clk_1500hz
 );
  
-negative_indicate : process (CURRENT_ANGLE)
+negative_indicate : process (CLK)
     variable angle_int : integer range -90 to 90;
 begin
     angle_int := to_integer(signed(CURRENT_ANGLE));
