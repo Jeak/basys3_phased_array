@@ -50,7 +50,7 @@ signal CURRENT_ANGLE : std_logic_vector(7 downto 0);
 
 begin
 
-FSM : angle_fsm port map (CLK => CLK, LEFT => button_left, RIGHT => button_right, RST => button_center, CURRENT_ANGLE => CURRENT_ANGLE);
+FSM : angle_fsm generic map (SIMULATING => false ) port map (CLK => CLK, LEFT => button_left, RIGHT => button_right, RST => button_center, CURRENT_ANGLE => CURRENT_ANGLE);
 
 DISPLAY : angle_display port map (CLK => CLK, ANODE => ANODE, CATHODE => CATHODE, CURRENT_ANGLE => CURRENT_ANGLE);
 
