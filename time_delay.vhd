@@ -18,7 +18,8 @@ architecture Behavioral of time_delay is
     signal element_sig : std_logic_vector(9 downto 0) := "0000000000";
     signal rst : std_logic := '0';
     -- create a shared variable
-    shared variable count : integer range -500000 to 500000;
+    signal count : integer range -500000 to 500000;
+	 signal old_current_angle : std_logic_vector(7 downto 0) := (others => '0');
     shared variable delay : integer range -500000 to 500000;
 	 
 	 signal count_local0 : unsigned(31 downto 0) := (others => '0');
@@ -67,18 +68,22 @@ begin
 -- create a counter that only resets when current_angle changes
 counter : process (CLK)
 begin
-    if count < 500000 then
-        if rising_edge(CLK) then
-            count := count + 1;
-        end if;
-    end if;
+	if rising_edge(CLK) then
+		old_current_angle <= CURRENT_ANGLE;
+		if(CURRENT_ANGLE /= old_current_angle) then
+			count <= -500000;
+		else
+			if count < 500000 then
+				count <= count + 1;
+			end if;
+		end if;
+	end if;
 end process;
 
 -- run when current angle changes
 angle_delay : process (CURRENT_ANGLE)
 
 begin
-    count := -500000;
     case (CURRENT_ANGLE) is
                 when "10100110" =>
                     delay := -333333;    
