@@ -34,7 +34,6 @@ end component;
 component time_delay
     Port ( CLK : in std_logic;
            CURRENT_ANGLE : in std_logic_vector(7 downto 0);
-           TONE : in std_logic;
            ELEMENT : out std_logic_vector(9 downto 0));
 end component;
 
@@ -45,7 +44,6 @@ component clock_divider is
 			CLKDIV : out  std_logic);
 end component;
 
-signal clk_1500hz : std_logic :='0';
 signal CURRENT_ANGLE : std_logic_vector(7 downto 0);
 
 begin
@@ -54,15 +52,8 @@ FSM : angle_fsm generic map (SIMULATING => false ) port map (CLK => CLK, LEFT =>
 
 DISPLAY : angle_display port map (CLK => CLK, ANODE => ANODE, CATHODE => CATHODE, CURRENT_ANGLE => CURRENT_ANGLE);
 
-DELAY : time_delay port map (CLK => CLK, TONE => clk_1500hz, CURRENT_ANGLE => CURRENT_ANGLE, ELEMENT => ELEMENT);
+DELAY : time_delay port map (CLK => CLK, CURRENT_ANGLE => CURRENT_ANGLE, ELEMENT => ELEMENT);
 
--- create a 1500 Hz Tone
-gen_1500: clock_divider 
-generic map ( DIVISOR => 66666 )
-PORT MAP(
-	CLK => CLK,
-	CLKDIV => clk_1500hz
-);
  
 negative_indicate : process (CLK)
     variable angle_int : integer range -90 to 90;

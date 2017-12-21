@@ -43,7 +43,6 @@ ARCHITECTURE behavior OF time_delay_tb IS
     PORT(
          CLK : IN  std_logic;
          CURRENT_ANGLE : IN  std_logic_vector(7 downto 0);
-         TONE : IN  std_logic;
          ELEMENT : OUT  std_logic_vector(9 downto 0)
         );
     END COMPONENT;
@@ -52,7 +51,6 @@ ARCHITECTURE behavior OF time_delay_tb IS
    --Inputs
    signal CLK : std_logic := '0';
    signal CURRENT_ANGLE : std_logic_vector(7 downto 0) := std_logic_vector(to_signed(-40, 8));
-   signal TONE : std_logic := '0';
 
  	--Outputs
    signal ELEMENT : std_logic_vector(9 downto 0);
@@ -66,13 +64,6 @@ end component;
  
 BEGIN
 
-	gen_1500: clock_divider 
-	generic map ( DIVISOR => 66666 )
-	PORT MAP(
-		CLK => CLK,
-		CLKDIV => TONE
-	);
- 
 	-- Instantiate the Unit Under Test (UUT)
    uut: time_delay PORT MAP (
           CLK => CLK,

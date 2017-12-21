@@ -11,7 +11,6 @@ use IEEE.NUMERIC_STD.ALL;
 entity time_delay is
     Port ( CLK : in std_logic;
            CURRENT_ANGLE : in std_logic_vector(7 downto 0);
-           TONE : in std_logic;
            ELEMENT : out std_logic_vector(9 downto 0));
 end time_delay;
 
