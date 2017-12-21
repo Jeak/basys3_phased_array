@@ -63,6 +63,7 @@ architecture Behavioral of time_delay is
 		( 333333*9, 333333*8, 333333*7, 333333*6, 333333*5, 333333*4, 333333*3, 333333*2, 333333*1, 333333*0 )
 	 );
 	 signal element_data : row;
+	 signal ram_addr : natural range 0 to 18 := 0;
 	 
 	component clock_divider is
 		Generic ( DIVISOR : natural ); -- must be even
@@ -82,7 +83,8 @@ begin
 	process(CLK) is
 	begin
 	if(rising_edge(CLK)) then
-		element_data <= delay_ram(to_integer(unsigned(CURRENT_ANGLE_INDEX)));
+		ram_addr <= to_integer(unsigned(CURRENT_ANGLE_INDEX));
+		element_data <= delay_ram(ram_addr);
 	end if;
 	end process;
 	

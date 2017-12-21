@@ -48,6 +48,7 @@ architecture Behavioral of angle_fsm is
 		std_logic_vector(to_signed(90, 8))
 	);
 	signal ram_addr : natural range 0 to ram'high := 0;
+	signal ram_addr2 : natural range 0 to ram'high := 0;
 	signal ram_data : std_logic_vector(7 downto 0);
 	
 begin
@@ -72,7 +73,8 @@ PORT MAP(
 	ram_proc : process(CLK) is
 	begin
 	if(rising_edge(CLK)) then
-		ram_data <= ram(ram_addr);
+		ram_addr2 <= ram_addr;
+		ram_data <= ram(ram_addr2);
 	end if;
 	end process;
 
