@@ -31,10 +31,9 @@ begin
 
 CATHODE(0) <= '1'; -- turn off decimal point
 
-process(CURRENT_ANGLE) is -- take absolute value of current angle, because negative sign is tears and sadness
-begin
-    MUX_INPUT <= std_logic_vector(abs(signed(CURRENT_ANGLE)));
-end process;
+-- take absolute value of current angle, because negative sign is tears and sadness
+-- (high bit is the sign bit; just set to 0 to get a positive number)
+MUX_INPUT <= "0" & CURRENT_ANGLE(6 downto 0);
 
 -- create a 240 hz tone
 tone_gen: clock_divider 
