@@ -23,6 +23,8 @@ architecture Behavioral of angle_display is
 	end component;
 
 signal clk_240 : std_logic := '0';
+signal clk_240_old : std_logic := '0';
+signal display_update : std_logic := '0';
 signal SEL : std_logic := '0';
 signal MUX_INPUT : std_logic_vector(7 downto 0);
 signal MUX_OUTPUT : std_logic_vector(3 downto 0);
@@ -44,6 +46,18 @@ PORT MAP(
 	HOLDOFF => (others => '0'),
 	CLKDIV => clk_240
 );
+
+-- detect rising edge of clk_240
+process(CLK) is
+begin
+if(rising_edge(CLK)) then
+	clk_240_old <= clk_240;
+end if;
+end process;
+display_update <= clk_240 and not clk_240_old;
+
+
+
     
 mux_switches : process (SEL) -- choose which set
 begin
@@ -54,29 +68,31 @@ begin
     end case; 
 end process;       
 
-anode_selector : process (clk_240)
+anode_selector : process (CLK)
     variable count : unsigned (0 downto 0) := "0"; 
 begin
-    if rising_edge(clk_240) then
-        count := count + 1;
-        case count is
-            -- anode (digit) selecred gets pulled to a 0 (one-cold)
-            when "0" =>
-            -- select digit 0
-            SEL <= '0';
-            ANODE <= "1110";
-            
-            when "1" =>
-            -- select digit 1
-            SEL <= '1';
-            ANODE <= "1101";
-				
-            when others =>
-            -- select digit 0
-            SEL <= '0';
-            ANODE <= "1110";
-        end case;            
-    end if;
+	if rising_edge(CLK) then
+		if(display_update = '1') then
+			count := count + 1;
+			case count is
+				-- anode (digit) selecred gets pulled to a 0 (one-cold)
+				when "0" =>
+				-- select digit 0
+				SEL <= '0';
+				ANODE <= "1110";
+
+				when "1" =>
+				-- select digit 1
+				SEL <= '1';
+				ANODE <= "1101";
+
+				when others =>
+				-- select digit 0
+				SEL <= '0';
+				ANODE <= "1110";
+			end case;            
+		end if;
+	end if;
 end process;
 
 seven_segment_decoder : process(MUX_OUTPUT) begin
