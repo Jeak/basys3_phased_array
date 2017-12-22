@@ -51,8 +51,8 @@ ARCHITECTURE behavior OF time_delay_tb IS
 
    --Inputs
    signal CLK : std_logic := '0';
-   signal CURRENT_ANGLE : std_logic_vector(7 downto 0) := std_logic_vector(to_signed(-40, 8));
-   signal CURRENT_ANGLE_INDEX : std_logic_vector(4 downto 0) := std_logic_vector(to_unsigned(5, 8));
+   signal CURRENT_ANGLE : std_logic_vector(7 downto 0) := std_logic_vector(to_signed(0, 8));
+   signal CURRENT_ANGLE_INDEX : std_logic_vector(4 downto 0) := std_logic_vector(to_unsigned(9, 5));
 
  	--Outputs
    signal ELEMENT : std_logic_vector(9 downto 0);
@@ -64,6 +64,10 @@ component clock_divider is
 			CLKDIV : out  std_logic);
 end component;
  
+ 
+	signal count : natural := 0;
+	constant one_ms : natural := 100000;
+	
 BEGIN
 
 	-- Instantiate the Unit Under Test (UUT)
@@ -75,4 +79,30 @@ BEGIN
         );
 
 	CLK <= not CLK after 5 ns;
+	
+	-- run simulator to 15ms
+	process(CLK) is
+	begin
+	if(rising_edge(CLK)) then
+		count <= count + 1;
+		if(count = 20) then
+			CURRENT_ANGLE <= std_logic_vector(to_signed(-10, 8));
+			CURRENT_ANGLE_INDEX <= std_logic_vector(to_unsigned(8, 5));
+		elsif(count = one_ms*2) then
+			CURRENT_ANGLE <= std_logic_vector(to_signed(-40, 8));
+			CURRENT_ANGLE_INDEX <= std_logic_vector(to_unsigned(5, 5));
+		elsif(count = one_ms*4) then
+			CURRENT_ANGLE <= std_logic_vector(to_signed(-90, 8));
+			CURRENT_ANGLE_INDEX <= std_logic_vector(to_unsigned(0, 5));
+		elsif(count = one_ms*7) then
+			CURRENT_ANGLE <= std_logic_vector(to_signed(10, 8));
+			CURRENT_ANGLE_INDEX <= std_logic_vector(to_unsigned(10, 5));
+		elsif(count = one_ms*10) then
+			CURRENT_ANGLE <= std_logic_vector(to_signed(40, 8));
+			CURRENT_ANGLE_INDEX <= std_logic_vector(to_unsigned(13, 5));
+			
+		end if;
+	end if;
+	end process;
+		
 END;

@@ -61,8 +61,13 @@ begin
 			if(RST = '1') then
 				-- The -1 accounts for the extra clock it takes to change states
 				reset_count <= to_integer(unsigned(HOLDOFF)) - 1;
-				clkout <= '0';
-				state <= OFF;
+				if(to_integer(unsigned(HOLDOFF)) /= 0) then
+					clkout <= '0';
+					state <= OFF;
+				else
+					count <= 0;
+					clkout <= '1';
+				end if;
 			else
 				if(count = actual_divisor-1) then
 					clkout <= not clkout;
