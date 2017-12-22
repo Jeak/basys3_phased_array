@@ -28,6 +28,7 @@ signal display_update : std_logic := '0';
 signal SEL : std_logic := '0';
 signal MUX_INPUT : std_logic_vector(7 downto 0);
 signal MUX_OUTPUT : std_logic_vector(3 downto 0);
+signal toggle : std_logic := '0';
 
 begin
 
@@ -69,28 +70,20 @@ begin
 end process;       
 
 anode_selector : process (CLK)
-    variable count : unsigned (0 downto 0) := "0"; 
 begin
 	if rising_edge(CLK) then
 		if(display_update = '1') then
-			count := count + 1;
-			case count is
+			toggle <= not toggle;
+			if(toggle = '0') then
 				-- anode (digit) selecred gets pulled to a 0 (one-cold)
-				when "0" =>
 				-- select digit 0
 				SEL <= '0';
 				ANODE <= "1110";
-
-				when "1" =>
+			elsif(toggle = '1') then
 				-- select digit 1
 				SEL <= '1';
 				ANODE <= "1101";
-
-				when others =>
-				-- select digit 0
-				SEL <= '0';
-				ANODE <= "1110";
-			end case;            
+			end if;  
 		end if;
 	end if;
 end process;
