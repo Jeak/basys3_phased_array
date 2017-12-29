@@ -19,8 +19,10 @@ architecture Behavioral of top is
 
 -- declare angle FSM
 component angle_fsm
+	generic (SIMULATING : boolean );
     Port ( CLK,LEFT,RIGHT,RST : in std_logic;
-           CURRENT_ANGLE : out std_logic_vector(7 downto 0) );
+           CURRENT_ANGLE : out std_logic_vector(7 downto 0);
+           CURRENT_ANGLE_INDEX : out std_logic_vector(4 downto 0) );
 end component; 
 
 -- declare angle display
@@ -34,36 +36,42 @@ end component;
 component time_delay
     Port ( CLK : in std_logic;
            CURRENT_ANGLE : in std_logic_vector(7 downto 0);
-           TONE : in std_logic;
+           CURRENT_ANGLE_INDEX : in std_logic_vector(4 downto 0);
            ELEMENT : out std_logic_vector(9 downto 0));
 end component;
 
-signal clk_1500hz : std_logic :='0';
 signal CURRENT_ANGLE : std_logic_vector(7 downto 0);
+signal CURRENT_ANGLE_INDEX : std_logic_vector(4 downto 0);
 
 begin
 
-FSM : angle_fsm port map (CLK => CLK, LEFT => button_left, RIGHT => button_right, RST => button_center, CURRENT_ANGLE => CURRENT_ANGLE);
+FSM : angle_fsm 
+	generic map (SIMULATING => false ) 
+	port map (
+		CLK => CLK, 
+		LEFT => button_left, 
+		RIGHT => button_right, 
+		RST => button_center, 
+		CURRENT_ANGLE => CURRENT_ANGLE,
+		CURRENT_ANGLE_INDEX => CURRENT_ANGLE_INDEX
+		);
 
-DISPLAY : angle_display port map (CLK => CLK, ANODE => ANODE, CATHODE => CATHODE, CURRENT_ANGLE => CURRENT_ANGLE);
+DISPLAY : angle_display 
+	port map (
+		CLK => CLK, 
+		ANODE => ANODE, 
+		CATHODE => CATHODE, 
+		CURRENT_ANGLE => CURRENT_ANGLE);
 
-DELAY : time_delay port map (CLK => CLK, TONE => clk_1500hz, CURRENT_ANGLE => CURRENT_ANGLE, ELEMENT => ELEMENT);
+DELAY : time_delay 
+	port map (
+		CLK => CLK, 
+		CURRENT_ANGLE => CURRENT_ANGLE, 
+		CURRENT_ANGLE_INDEX => CURRENT_ANGLE_INDEX, 
+		ELEMENT => ELEMENT);
 
--- create a 1500 Hz Tone
- tone_gen : process (CLK)
-        variable count : unsigned (31 downto 0) := "00000000000000000000000000000000";
-    begin
-        if rising_edge(CLK) then
-            count := count + X"1";
-            --if count = X"1" then -- simulation 100mhz
-            if count = "00000000000000000000001010011010" then
-                clk_1500hz <= not clk_1500hz;
-                count := "00000000000000000000000000000000";
-            end if;
-        end if;
-    end process;
  
-negative_indicate : process (CURRENT_ANGLE)
+negative_indicate : process (CLK)
     variable angle_int : integer range -90 to 90;
 begin
     angle_int := to_integer(signed(CURRENT_ANGLE));
